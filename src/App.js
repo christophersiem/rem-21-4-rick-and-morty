@@ -8,6 +8,7 @@ function App() {
 
 
     const [characters, setCharacters] = useState([])
+    const [search, setSearch] = useState("")
 
     const handleButtonClick = () => {
         setCharacters(characterResponse.results)
@@ -17,13 +18,22 @@ function App() {
         setCharacters([])
     }
 
+    const handleSearch = event => {
+        const newSearch = event.target.value
+        setSearch(newSearch)
+    }
+
+    const filteredCharacters = characters.filter(character =>
+        character.name.toLowerCase().includes(search.toLowerCase())
+    )
+
     return (
         <div>
             <Header title="Rick & Morty App"/>
             <button onClick={handleButtonClick} >Load Characters</button>
             <button onClick={handleClear} >Clear Characters</button>
-            <CharacterGallery characters={characters} />
-
+            <input type="text" onChange={handleSearch} value={search} />
+            <CharacterGallery characters={filteredCharacters}/>
         </div>
     );
 }
