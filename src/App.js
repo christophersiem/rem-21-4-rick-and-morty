@@ -13,10 +13,15 @@ function App() {
         setCharacters(characterResponse.results)
     }
 
+    const handleClear = () => {
+        setCharacters([])
+    }
+
     return (
         <div>
             <Header title="Rick & Morty App"/>
             <button onClick={handleButtonClick} >Load Characters</button>
+            <button onClick={handleClear} >Clear Characters</button>
             <CharacterGallery characters={characters} />
 
         </div>
