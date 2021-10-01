@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import CharacterGallery from "./components/CharacterGallery";
 import {useEffect, useState} from "react";
 import {fetchCharacters} from "./services/rick-and-morty-api-service";
+import styled from "styled-components/macro";
 
 function App() {
     const [characters, setCharacters] = useState([])
@@ -50,16 +51,17 @@ function App() {
     return (
         <div>
             <Header title="Rick & Morty App"/>
-            <button
+            <Button
+                primary
                 onClick={handlePreviousPage}
                 disabled={previousPageUrl === null}
             >Previous Page
-            </button>
-            <button
+            </Button>
+            <Button
                 onClick={handleNextPage}
                 disabled={nextPageUrl === null}
             >Next Page
-            </button>
+            </Button>
             <input
                 type="text"
                 onChange={handleSearch}
@@ -70,3 +72,7 @@ function App() {
 }
 
 export default App;
+
+const Button = styled.button`
+    background: ${props => props.primary ? "black" : "blue"};
+`
