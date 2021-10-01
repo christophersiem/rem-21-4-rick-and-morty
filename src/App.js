@@ -64,7 +64,9 @@ function App() {
                 type="text"
                 onChange={handleSearch}
                 value={search}/>
-            <CharacterGallery characters={filteredCharacters}/>
+            {characters.length === 0 ?
+                <p>No characters found</p> :
+                <CharacterGallery characters={filteredCharacters}/>}
         </div>
     );
 }
