@@ -1,6 +1,6 @@
 
-export const fetchCharacters = (page) => {
-    return fetch("https://rickandmortyapi.com/api/character/?page=" + page)
+export const fetchCharacters = (url) => {
+    return fetch(url)
         .then(response => {
             if (response.ok) {
                 return response.json()
@@ -8,5 +8,4 @@ export const fetchCharacters = (page) => {
                 throw new Error("Error while loading characters from Rick and Morty API!")
             }
         })
-        .then(page => page.results)
 }

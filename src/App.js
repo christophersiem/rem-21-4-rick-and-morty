@@ -7,13 +7,24 @@ import {fetchCharacters} from "./services/rick-and-morty-api-service";
 function App() {
     const [characters, setCharacters] = useState([])
     const [search, setSearch] = useState("")
-    const [page, setPage] = useState(0)
+    const [nextPageUrl, setNextPageUrl] = useState();
+    const [previousPageUrl, setPreviousPageUrl] = useState();
+    const startUrl = "https://rickandmortyapi.com/api/character"
 
-    useEffect( () =>  {
-        fetchCharacters(page)
-            .then(characters => setCharacters(characters))
+    const getCharactersFromApi = (url) => {
+        fetchCharacters(url)
+            .then(response => {
+                setNextPageUrl(response.info.next)
+                setPreviousPageUrl(response.info.prev)
+                setCharacters(response.results)
+            })
             .catch(error => console.log(error))
-    }, [page])
+    }
+
+    useEffect(() => {
+        getCharactersFromApi(startUrl)
+    }, [])
+
 
     const handleSearch = event => {
         const newSearch = event.target.value
@@ -24,21 +35,35 @@ function App() {
         character.name.toLowerCase().includes(search.toLowerCase())
     )
 
-    function handlePreviousPage(){
-        setPage(page-1)
+    const handlePreviousPage = () => {
+        if (previousPageUrl !== null) {
+            getCharactersFromApi(previousPageUrl)
+        }
     }
 
-    function handleNextPage(){
-        setPage(page+1)
+    const handleNextPage = () => {
+        if (nextPageUrl !== null) {
+            getCharactersFromApi(nextPageUrl)
+        }
     }
 
     return (
         <div>
             <Header title="Rick & Morty App"/>
-            <button onClick={handlePreviousPage}>previous</button>
-            <button onClick={handleNextPage}>next</button>
-
-            <input type="text" onChange={handleSearch} value={search} />
+            <button
+                onClick={handlePreviousPage}
+                disabled={previousPageUrl === null}
+            >Previous Page
+            </button>
+            <button
+                onClick={handleNextPage}
+                disabled={nextPageUrl === null}
+            >Next Page
+            </button>
+            <input
+                type="text"
+                onChange={handleSearch}
+                value={search}/>
             <CharacterGallery characters={filteredCharacters}/>
         </div>
     );
