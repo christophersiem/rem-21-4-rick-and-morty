@@ -1,22 +1,19 @@
 import './App.css';
 import Header from "./components/Header";
-import characterResponse from "./characters.json"
 import CharacterGallery from "./components/CharacterGallery";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {fetchCharacters} from "./services/rick-and-morty-api-service";
 
 function App() {
-
-
     const [characters, setCharacters] = useState([])
     const [search, setSearch] = useState("")
+    const [page, setPage] = useState(0)
 
-    const handleButtonClick = () => {
-        setCharacters(characterResponse.results)
-    }
-
-    const handleClear = () => {
-        setCharacters([])
-    }
+    useEffect( () =>  {
+        fetchCharacters(page)
+            .then(characters => setCharacters(characters))
+            .catch(error => console.log(error))
+    }, [page])
 
     const handleSearch = event => {
         const newSearch = event.target.value
@@ -27,11 +24,20 @@ function App() {
         character.name.toLowerCase().includes(search.toLowerCase())
     )
 
+    function handlePreviousPage(){
+        setPage(page-1)
+    }
+
+    function handleNextPage(){
+        setPage(page+1)
+    }
+
     return (
         <div>
             <Header title="Rick & Morty App"/>
-            <button onClick={handleButtonClick} >Load Characters</button>
-            <button onClick={handleClear} >Clear Characters</button>
+            <button onClick={handlePreviousPage}>previous</button>
+            <button onClick={handleNextPage}>next</button>
+
             <input type="text" onChange={handleSearch} value={search} />
             <CharacterGallery characters={filteredCharacters}/>
         </div>
